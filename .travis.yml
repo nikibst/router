@@ -2,10 +2,6 @@
 language: php
 
 php:
-  - 5.3
-  - 5.4
-  - 5.5
-  - 5.6
   - 7.1
 
 matrix:
@@ -41,39 +37,9 @@ before_install:
   # install NGINX
   - sudo apt-get install -y nginx-full-dbg
 
-  # download PHP
-  - wget http://at2.php.net/get/php-7.1.3.tar.bz2/from/this/mirror >/dev/null 2>&1
-  - tar -xf mirror
-
 install:
-  # Go to php installation folder
-  - cd php-7.1.3
-
-   # install PHP
-  - ./configure --with-pdo-mysql --with-zlib --enable-maintainer-zts --with-curl --enable-bcmath --with-openssl --with-mysqli --enable-mbstring --with-gettext --enable-intl --with-gd --with-jpeg-dir --with-png-dir --with-freetype-dir --with-xsl --enable-sockets --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --enable-debug --prefix=/usr/local/php --with-libdir=/lib/x86_64-linux-gnu --with-config-file-path=/usr/local/php/lib --with-config-file-scan-dir=/usr/local/php/etc/php-fpm.d
-  - sudo make
-  - sudo make install
-
-  # configure php files
-  - cp ./sapi/fpm/php-fpm.conf /usr/local/php/etc/php-fpm.conf
-  - cp ./sapi/fpm/www.conf /usr/local/php/etc/php-fpm.d/
-  - cp ./sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
-  - chmod +x /etc/init.d/php-fpm
-
-  # Go back
-  - cd ..
-
   # run composer
   - sudo php composer.phar install
-
-  # start php-fpm service
-  - sudo service php-fpm start
-
-  #configure NGINX
-  - cp ./default /etc/nginx/sites-available/default
-
-  #restart NGINX service
-  - service nginx restart
 
 #before_script:
 
