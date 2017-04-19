@@ -8,39 +8,13 @@ matrix:
   fast_finish: true
 
 before_install:
-  # install PHP installation dependencies
-  - sudo apt-get update > /dev/null
-  - sudo apt-get install  > /dev/null
-  - sudo apt-get install -y libxml2-dev  > /dev/null
-  - sudo apt-get install -y libcurl4-openssl-dev  > /dev/null
-  - sudo apt-get install -y libjpeg-dev  > /dev/null
-  - sudo apt-get install -y libpng-dev  > /dev/null
-  - sudo apt-get install -y libxpm-dev  > /dev/null
-  - sudo apt-get install -y libmysqlclient-dev  > /dev/null
-  - sudo apt-get install -y libpq-dev  > /dev/null
-  - sudo apt-get install -y libicu-dev  > /dev/null
-  - sudo apt-get install -y libfreetype6-dev  > /dev/null
-  - sudo apt-get install -y libldap2-dev  > /dev/null
-  - sudo apt-get install -y libxslt-dev  > /dev/null
-
-  #install git & dependencies
-  - sudo apt-get install -y build-essential  > /dev/null
-  - sudo apt-get install g++  > /dev/null
-  - sudo apt-get install -y zip  > /dev/null
-  - sudo apt-get install -y autoconf  > /dev/null
-  - sudo apt-get install -y libevent-pthreads-2.0-5  > /dev/null
-  - sudo apt-get install -y git  > /dev/null
-
   # install mysql-server
   - sudo apt-get install -y mysql-server
 
-  # install NGINX
-  - sudo apt-get install -y nginx-full-dbg
-
 install:
   # run composer
-  - sudo php composer.phar install
+  - composer install
 
 #before_script:
 
-script: php ./phpunit.phar --configuration ./phpunit.xml
+script: phpunit --configuration ./phpunit.xml
