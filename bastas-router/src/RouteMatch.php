@@ -2,31 +2,10 @@
 
 namespace Bastas\Router;
 
-use Bastas\Router\Route\Dynamic;
-use Bastas\Router\Route\Literal;
 use Zend\Diactoros\ServerRequest;
 
 final class RouteMatch
 {
-    public function matchUri(ServerRequest $request, array $routeCollection)
-    {
-        $segmentedUri = $this->extractSegmentedUri($request->getUri()->getPath());
-
-        if (!isset($routeCollection[$segmentedUri[0]])) {
-            return false;
-        }
-
-        if (($finalRouteElement = $this->routeMatch($routeCollection[$segmentedUri[0]], $segmentedUri))) {
-            if ($this->methodMatch($request->getMethod(), $finalRouteElement->getAllowedMethods()) &&
-                $this->schemeMatch($request->getUri()->getScheme(), $finalRouteElement->getAllowedSchemes())
-            ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private function methodMatch($requestMethod, $allowedMethods)
     {
         if (in_array($requestMethod, $allowedMethods)) {
@@ -57,20 +36,29 @@ final class RouteMatch
         return $segmentedUri;
     }
 
-    private function routeMatch($dllList, $segmentedUri)
+    private function attributesMatch($request, $routeElement)
+    {
+        if (!$this->methodMatch($request->getMethod(), $routeElement->getAllowedMethods())) {
+            return false;
+        }
+
+        if (!$this->schemeMatch($request->getMethod(), $routeElement->getAllowedMethods())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function pathMatch($dllList, $segmentedUri)
     {
         $depthCnt = 0;
         $finalRouteElement = null;
         $dllList->rewind();
 
         while (isset($segmentedUri[$depthCnt])) {
-            if ($dllList->current() instanceof Dynamic) {
-                if (preg_match($dllList->current()->getRoute(), $segmentedUri[$depthCnt]) !== 1) {
-                    return false;
-                }
-            } elseif ($dllList->current() instanceof Literal) {
-                if ($dllList->current()->getRoute() !== $segmentedUri[$depthCnt]) {
-                    return false;
+            if ($dllList->current() instanceof RouteInterface) {
+                if(!$dllList->current()->stringMatch($segmentedUri[$depthCnt])) {
+                    return null;
                 }
             }
 
@@ -81,5 +69,22 @@ final class RouteMatch
         }
 
         return $finalRouteElement;
+    }
+
+    public function matchUri(ServerRequest $request, array $routeCollection)
+    {
+        $segmentedUri = $this->extractSegmentedUri($request->getUri()->getPath());
+
+        if(isset($routeCollection[$segmentedUri[0]])) {
+            $finalRouteElement = $this->pathMatch($routeCollection[$segmentedUri[0]], $segmentedUri);
+
+            if (null !== $finalRouteElement) {
+                if($this->attributesMatch($request, $finalRouteElement)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

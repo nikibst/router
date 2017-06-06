@@ -18,3 +18,7 @@ install:
 #before_script:
 
 script: phpunit --configuration ./phpunit.xml
+
+deploy:
+  on:
+    tags: true
