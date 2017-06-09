@@ -71,12 +71,13 @@ final class RouteMatch
         return $finalRouteElement;
     }
 
-    public function matchUri(ServerRequest $request, array $routeCollection)
+    public function matchUri(ServerRequest $request, RouteCollection $routeCollection)
     {
+        $collection = $routeCollection->getRouteCollection();
         $segmentedUri = $this->extractSegmentedUri($request->getUri()->getPath());
 
-        if(isset($routeCollection[$segmentedUri[0]])) {
-            $finalRouteElement = $this->pathMatch($routeCollection[$segmentedUri[0]], $segmentedUri);
+        if(isset($collection[$segmentedUri[0]])) {
+            $finalRouteElement = $this->pathMatch($collection[$segmentedUri[0]], $segmentedUri);
 
             if (null !== $finalRouteElement) {
                 if($this->attributesMatch($request, $finalRouteElement)) {
