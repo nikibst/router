@@ -58,5 +58,5 @@ $request = \Zend\Diactoros\ServerRequestFactory::fromGlobals(
 );
 
 $routeMatch = new \Bastas\Router\RouteMatch();
-var_dump($routeMatch->matchUri($request, (new \Bastas\Router\RouteCollection($configRoutes))->getRouteCollection()));
+var_dump($routeMatch->matchUri($request, new \Bastas\Router\RouteCollection($configRoutes)));
 ````
