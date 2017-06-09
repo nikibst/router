@@ -12,9 +12,9 @@ final class RouteDoublyLinkedList extends \SplDoublyLinkedList
         $type,
         $name,
         $route,
-        $allowedMethods = null,
-        $allowedSchemes = null,
-        $allowedPorts = null
+        array $allowedMethods = [],
+        array $allowedSchemes = [],
+        array $allowedPorts = []
     ) {
         $routeObj = null;
 

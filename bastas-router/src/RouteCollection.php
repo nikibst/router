@@ -5,6 +5,9 @@ namespace Bastas\Router;
 final class RouteCollection
 {
     private $routeCollection = [];
+    private $allowedMethods = ['POST', 'GET', 'PUT', 'PATCH', 'DELETE'];
+    private $allowedPorts = [80, 443];
+    private $allowedSchemes = ['http', 'https'];
 
     public function __construct($routesConfiguration)
     {
@@ -20,13 +23,13 @@ final class RouteCollection
                 $actualRoute = $routeTree['route_node']['route'];
 
                 $allowedMethods = isset($routeTree['route_node']['allowed_methods']) ?
-                                        $routeTree['route_node']['allowed_methods'] : null;
+                                        $routeTree['route_node']['allowed_methods'] : $this->allowedMethods;
 
                 $allowedPorts = isset($routeTree['route_node']['allowed_ports']) ?
-                                      $routeTree['route_node']['allowed_ports'] : null;
+                                      $routeTree['route_node']['allowed_ports'] : $this->allowedPorts;
 
                 $allowedSchemes = isset($routeTree['route_node']['allowed_schemes']) ?
-                                        $routeTree['route_node']['allowed_schemes'] : null;
+                                        $routeTree['route_node']['allowed_schemes'] : $this->allowedSchemes;
 
                 if ($cnt++ == 0) {
                     $topDllElementName = $actualRoute;

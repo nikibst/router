@@ -9,9 +9,9 @@ abstract class AbstractRoute
 
     private $name = [];
     private $route = [];
-    private $allowedMethods = ['POST', 'GET', 'PUT', 'PATCH', 'DELETE'];
-    private $allowedPorts = [80, 443];
-    private $allowedSchemes = ['http', 'https'];
+    private $allowedMethods = [];
+    private $allowedPorts = [];
+    private $allowedSchemes = [];
 
     /**
      * Route constructor.
@@ -21,22 +21,20 @@ abstract class AbstractRoute
      * @param array $allowedPorts
      * @param array $allowedSchemes
      */
-    public function __construct($name, $route, $allowedMethods = null, $allowedSchemes = null, $allowedPorts = null)
+    public function __construct
+    (
+        $name,
+        $route,
+        array $allowedMethods = [],
+        array $allowedSchemes = [],
+        array $allowedPorts = []
+    )
     {
         $this->name = $name;
         $this->route = $route;
-
-        if (null !== $allowedMethods) {
-            $this->allowedMethods = $allowedMethods;
-        }
-
-        if (null !== $allowedSchemes) {
-            $this->allowedSchemes = $allowedSchemes;
-        }
-
-        if (null !== $allowedPorts) {
-            $this->allowedPorts = $allowedPorts;
-        }
+        $this->allowedMethods = $allowedMethods;
+        $this->allowedSchemes = $allowedSchemes;
+        $this->allowedPorts = $allowedPorts;
     }
 
     /**
